@@ -1,0 +1,7 @@
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuModel\obj\Release\SudokuModel.dll
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuModel\obj\Release\SudokuModel.pdb
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuModel\bin\Release\SudokuModel.dll
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuModel\bin\Release\SudokuModel.pdb
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuModel\bin\Release\MetroFramework.Design.dll
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuModel\bin\Release\MetroFramework.dll
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuModel\bin\Release\MetroFramework.Fonts.dll

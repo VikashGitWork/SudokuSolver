@@ -1,0 +1,14 @@
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\obj\Release\SudokuSolver.Puzzle.resources
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\obj\Release\SudokuSolver.Properties.Resources.resources
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\obj\Release\SudokuSolver.csproj.GenerateResource.Cache
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\bin\Release\SudokuSolver.exe.config
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\bin\Release\SudokuSolver.exe
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\bin\Release\SudokuSolver.pdb
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\bin\Release\MetroFramework.Design.dll
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\bin\Release\MetroFramework.dll
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\bin\Release\MetroFramework.Fonts.dll
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\bin\Release\SudokuModel.dll
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\bin\Release\SudokuModel.pdb
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\obj\Release\SudokuSolver.csprojResolveAssemblyReference.cache
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\obj\Release\SudokuSolver.exe
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\obj\Release\SudokuSolver.pdb

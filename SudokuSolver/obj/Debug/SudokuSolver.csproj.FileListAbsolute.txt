@@ -1,0 +1,28 @@
+c:\users\vchoudhari\documents\visual studio 2017\Projects\SudokuSolver\SudokuSolver\bin\Debug\SudokuSolver.exe.config
+c:\users\vchoudhari\documents\visual studio 2017\Projects\SudokuSolver\SudokuSolver\bin\Debug\SudokuSolver.exe
+c:\users\vchoudhari\documents\visual studio 2017\Projects\SudokuSolver\SudokuSolver\bin\Debug\SudokuSolver.pdb
+c:\users\vchoudhari\documents\visual studio 2017\Projects\SudokuSolver\SudokuSolver\obj\Debug\SudokuSolver.Properties.Resources.resources
+c:\users\vchoudhari\documents\visual studio 2017\Projects\SudokuSolver\SudokuSolver\obj\Debug\SudokuSolver.csproj.GenerateResource.Cache
+c:\users\vchoudhari\documents\visual studio 2017\Projects\SudokuSolver\SudokuSolver\obj\Debug\SudokuSolver.exe
+c:\users\vchoudhari\documents\visual studio 2017\Projects\SudokuSolver\SudokuSolver\obj\Debug\SudokuSolver.pdb
+C:\Users\vchoudhari\Documents\Visual Studio 2017\Projects\SudokuSolver\SudokuSolver\obj\Debug\SudokuSolver.csprojResolveAssemblyReference.cache
+C:\Users\vchoudhari\Documents\Visual Studio 2017\Projects\SudokuSolver\SudokuSolver\obj\Debug\SudokuSolver.Puzzle.resources
+C:\Users\vchoudhari\Documents\Visual Studio 2017\Projects\SudokuSolver\SudokuSolver\bin\Debug\SudokuModel.dll
+C:\Users\vchoudhari\Documents\Visual Studio 2017\Projects\SudokuSolver\SudokuSolver\bin\Debug\SudokuModel.pdb
+C:\Users\vchoudhari\Documents\Visual Studio 2017\Projects\SudokuSolver\SudokuSolver\bin\Debug\MetroFramework.Design.dll
+C:\Users\vchoudhari\Documents\Visual Studio 2017\Projects\SudokuSolver\SudokuSolver\bin\Debug\MetroFramework.dll
+C:\Users\vchoudhari\Documents\Visual Studio 2017\Projects\SudokuSolver\SudokuSolver\bin\Debug\MetroFramework.Fonts.dll
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\bin\Debug\SudokuSolver.exe.config
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\bin\Debug\SudokuSolver.exe
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\bin\Debug\SudokuSolver.pdb
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\bin\Debug\MetroFramework.Design.dll
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\bin\Debug\MetroFramework.dll
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\bin\Debug\MetroFramework.Fonts.dll
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\bin\Debug\SudokuModel.dll
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\bin\Debug\SudokuModel.pdb
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\obj\Debug\SudokuSolver.csprojResolveAssemblyReference.cache
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\obj\Debug\SudokuSolver.Puzzle.resources
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\obj\Debug\SudokuSolver.Properties.Resources.resources
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\obj\Debug\SudokuSolver.csproj.GenerateResource.Cache
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\obj\Debug\SudokuSolver.exe
+C:\Vikash\Sudoku Solver\SudokuSolver\SudokuSolver\obj\Debug\SudokuSolver.pdb
