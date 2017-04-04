@@ -22,7 +22,7 @@ namespace SudokuSolver
 
 			boxes = new TextBox[9, 9];
 			Font font = null;
-			
+			mCbLevel.SelectedItem = "Easy";
 			for (int x = 0; x < 9; x++)
 				for (int y = 0; y < 9; y++)
 				{
@@ -72,7 +72,7 @@ namespace SudokuSolver
 				for (int x = 0; x < 9; x++)
 					if(Int32.TryParse(boxes[x, y].Text, out int ignoreMe))
 					{ 
-					d[y,x] = (byte)Int32.Parse(boxes[x, y].Text);
+					d[x,y] = (byte)Int32.Parse(boxes[x, y].Text);
 					}
 			return d;
 		}
@@ -198,7 +198,10 @@ namespace SudokuSolver
 
 		private void BtnImport_Click(object sender, EventArgs e)
 		{
-			// Load Sudoku
+			// Import Sudoku
+			mLblInfo.Text = "";
+			try
+			{
 			OpenFileDialog openDlg = new OpenFileDialog()
 			{
 				Filter = "txt files (*.txt)|*.txt",
@@ -223,6 +226,13 @@ namespace SudokuSolver
 				LoadData(map);
 			}
 		}
-	
+			catch (Exception ex)
+			{
+				mLblInfo.Text = mLblInfo.Text +
+					"--------------------" +
+				   "\nInvalid sudoku File";
+
+			}
+		}
 	}
 }
