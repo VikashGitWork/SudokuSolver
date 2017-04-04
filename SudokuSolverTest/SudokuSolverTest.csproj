@@ -48,11 +48,21 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="SudokuSolverTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SudokuModel\SudokuModel.csproj">
+      <Project>{d1660a2f-4743-46db-8f97-e2e6511615c9}</Project>
+      <Name>SudokuModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SudokuSolver\SudokuSolver.csproj">
+      <Project>{e5a67fff-9b35-4e4c-aecc-ccbaff94cb74}</Project>
+      <Name>SudokuSolver</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
