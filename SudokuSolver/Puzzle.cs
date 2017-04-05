@@ -154,21 +154,42 @@ namespace SudokuSolver
 
 			DateTime now = DateTime.Now;
 			mLblInfo.Text = mLblInfo.Text + "Solve started: " + now.ToLongTimeString() + "\r\n";
-
-			if (s.Solve())
+			// should not solve if sudoku is already solved
+			if (IsSudokuGridFull() & s.IsSudokuUnique())
 			{
-				// Solve successful
-				mLblInfo.Text = mLblInfo.Text + "  Solve successful\r\n";
-
-				d = s.Data;
-				SetData(d);
+				mLblInfo.Text = "--------------------\r\nSolve Not Required\r\n";
 			}
 			else
 			{
-				// Solve failed
-				mLblInfo.Text = mLblInfo.Text + "  Solve failed\r\n";
+				if (s.Solve())
+				{
+					// Solve successful
+					mLblInfo.Text = mLblInfo.Text + "  Solve successful\r\n";
+
+					d = s.Data;
+					SetData(d);
+					mLblInfo.Text = mLblInfo.Text + String.Format("{0} seconds\r\n", (DateTime.Now - now).TotalSeconds);
+				}
+				else
+				{
+					// Solve failed
+					mLblInfo.Text = mLblInfo.Text + "  Solve failed\r\n";
+					mLblInfo.Text = mLblInfo.Text + String.Format("{0} seconds\r\n", (DateTime.Now - now).TotalSeconds);
+				}
 			}
-			mLblInfo.Text = mLblInfo.Text + String.Format("{0} seconds\r\n", (DateTime.Now - now).TotalSeconds);
+			
+			
+		}
+
+		private bool IsSudokuGridFull()
+		{
+			bool ret = true;
+			byte[,] d = GetData();
+			for (int y = 0; y < 9; y++)
+				for (int x = 0; x < 9; x++)
+					if (d[y, x] == 0)
+						ret = false; 
+			return ret;
 		}
 
 		private void BtnUnique_Click(object sender, EventArgs e)
