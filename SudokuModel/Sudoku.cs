@@ -2,8 +2,8 @@
 
 namespace SudokuModel
 {
-    public class Sudoku
-    {
+	public class Sudoku
+	{
 		// 0 = solve for
 		private byte[,] m_sudoku;
 		private enum Ret { Unique, NotUnique, NoSolution };
@@ -79,13 +79,13 @@ namespace SudokuModel
 		public Tuple<long, bool> Generate(int spots, int numberOfTries = 1000000)
 		{
 
-		if (!IsSudokuFeasible())
-		{
+			if (!IsSudokuFeasible())
+			{
 				// The supplied data is not feasible.
-			      // - or -
+				// - or -
 				// The supplied data has too many spots set.
 				return Tuple.Create(0L, false);
-		}
+			}
 
 			/////////////////////////////////////
 			// Randomize spots
@@ -93,32 +93,33 @@ namespace SudokuModel
 
 			var originalData = Data;
 
-		long tries = 0;
-		for (; tries < numberOfTries; tries++)
+			long tries = 0;
+			for (; tries < numberOfTries; tries++)
 			{
 				// Try to generate spots
-				{if (Gen(spots))
-					
-					// Test if unique solution.
-				if (IsSudokuUnique())
 				{
-						return Tuple.Create(tries, true);
-					}
+					if (Gen(spots))
+
+						// Test if unique solution.
+						if (IsSudokuUnique())
+						{
+							return Tuple.Create(tries, true);
+						}
 				}
 
-			// Start over.
-			Data = originalData;
-		}
+				// Start over.
+				Data = originalData;
+			}
 
 			return Tuple.Create(tries, false);
 		}
 
 		private bool Gen(int spots)
 		{
+			int xRand, yRand;
 			for (int i = 0; i < spots; i++)
 			{
-				int xRand, yRand;
-
+				// Selecting random non used spot
 				do
 				{
 					xRand = Randomizer.GetInt(9);
@@ -129,42 +130,43 @@ namespace SudokuModel
 				// Get feasible values for spot.
 				/////////////////////////////////////
 
-				// Set M of possible solutions
-				byte[] M = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+				// Set P is possible solutions 
+				byte[] P = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
-				// Remove used numbers in the vertical direction
+				// Remove used numbers in the column from possiblities & set it to 0
 				for (int a = 0; a < 9; a++)
-					M[m_sudoku[a, xRand]] = 0;
+					P[m_sudoku[a, xRand]] = 0;
 
-				// Remove used numbers in the horizontal direction
+				// Remove used numbers in the row from possiblities & set it to 0
 				for (int b = 0; b < 9; b++)
-					M[m_sudoku[yRand, b]] = 0;
+					P[m_sudoku[yRand, b]] = 0;
 
-				// Remove used numbers in the sub square.
+				// Remove used numbers in the 3X3 block from possiblities & set it to 0
+				EntryPoint p;
 				int squareIndex = m_subSquare[yRand, xRand];
 				for (int c = 0; c < 9; c++)
 				{
-					EntryPoint p = m_subIndex[squareIndex, c];
-					M[m_sudoku[p.x, p.y]] = 0;
+					p = m_subIndex[squareIndex, c];
+					P[m_sudoku[p.x, p.y]] = 0;
 				}
 
-				int cM = 0;
-				// Calculate cardinality of M
+				int cP = 0;
+				// Calculate cardinality of P (Possbilities)
 				for (int d = 1; d < 10; d++)
-					cM += M[d] == 0 ? 0 : 1;
+					cP += P[d] == 0 ? 0 : 1;
 
 				// Is there a number to use?
-				if (cM > 0)
+				if (cP > 0)
 				{
 					int e = 0;
 
 					do
 					{
-						// Randomize number from the feasible set M
+						// Randomize number from the feasible set P except 0
 						e = Randomizer.GetInt(1, 10);
-					} while (M[e] == 0);
+					} while (P[e] == 0);
 
-					// Set number in Sudoku
+					// Set one possible number in Sudoku from rule satisfied possbilities (Row, Column & Block Constraint) 
 					m_sudoku[yRand, xRand] = (byte)e;
 				}
 				else
@@ -248,6 +250,7 @@ namespace SudokuModel
 			Data = m;
 			return b;
 		}
+
 
 		/// <summary>
 		// Is there one and only one solution
@@ -362,11 +365,15 @@ namespace SudokuModel
 		/// <returns>Success</returns>
 		public bool Solve()
 		{
+
 			// Find untouched location with most information
 			int xp = 0;
 			int yp = 0;
 			byte[] Mp = null;
 			int cMp = 10;
+
+			if (TestUniqueness() == Ret.NotUnique)
+				return false;
 
 			for (int y = 0; y < 9; y++)
 			{
@@ -375,35 +382,35 @@ namespace SudokuModel
 					// Is this spot unused?
 					if (m_sudoku[y, x] == 0)
 					{
-						// Set M of possible solutions
-						byte[] M = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+						// Set P of possible solutions
+						byte[] P = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
 						// Remove used numbers in the vertical direction
 						for (int a = 0; a < 9; a++)
-							M[m_sudoku[a, x]] = 0;
+							P[m_sudoku[a, x]] = 0;
 
 						// Remove used numbers in the horizontal direction
 						for (int b = 0; b < 9; b++)
-							M[m_sudoku[y, b]] = 0;
+							P[m_sudoku[y, b]] = 0;
 
 						// Remove used numbers in the sub square.
 						int squareIndex = m_subSquare[y, x];
 						for (int c = 0; c < 9; c++)
 						{
 							EntryPoint p = m_subIndex[squareIndex, c];
-							M[m_sudoku[p.x, p.y]] = 0;
+							P[m_sudoku[p.x, p.y]] = 0;
 						}
 
-						int cM = 0;
+						int cP = 0;
 						// Calculate cardinality of M
 						for (int d = 1; d < 10; d++)
-							cM += M[d] == 0 ? 0 : 1;
+							cP += P[d] == 0 ? 0 : 1;
 
 						// Is there more information in this spot than in the best yet?
-						if (cM < cMp)
+						if (cP < cMp)
 						{
-							cMp = cM;
-							Mp = M;
+							cMp = cP;
+							Mp = P;
 							xp = x;
 							yp = y;
 						}

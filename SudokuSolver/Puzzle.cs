@@ -23,24 +23,27 @@ namespace SudokuSolver
 			boxes = new TextBox[9, 9];
 			Font font = null;
 			mCbLevel.SelectedItem = "Easy";
+			TextBox txtBox;
 			for (int x = 0; x < 9; x++)
 				for (int y = 0; y < 9; y++)
 				{
 					{
-						TextBox textBox = new TextBox();
+						txtBox = new TextBox();
 						if (font == null)
-							font = new Font(textBox.Font, FontStyle.Bold);
-						textBox.Location = new Point(x * 40 + 10, y * 30 + 70);
-						textBox.Size = new Size(36, 21);
-						textBox.Text = "0";
-						textBox.MaxLength = 1;
-						textBox.TextAlign = HorizontalAlignment.Center;
-						textBox.ShortcutsEnabled = false;
-						this.Controls.Add(textBox);
-						 boxes[y,x] = textBox;
+							font = new Font(txtBox.Font, FontStyle.Bold);
+						txtBox.Location = new Point(x * 40 + 10, y * 30 + 70);
+						txtBox.Size = new Size(36, 21);
+						txtBox.Text = "-";
+						txtBox.MaxLength = 1;
+						txtBox.TextAlign = HorizontalAlignment.Center;
+						txtBox.ShortcutsEnabled = false;
+						if (x == 0 || x == 2 || x == 4 || x == 6 || x == 8)
+							txtBox.BackColor = Color.WhiteSmoke;
+						this.Controls.Add(txtBox);
+						boxes[y, x] = txtBox;
 					}
 				}
-			
+
 		}
 
 		protected override void OnPaint(PaintEventArgs e)
@@ -65,65 +68,6 @@ namespace SudokuSolver
 			formGfx.Dispose();
 		}
 
-		private byte[,] GetData()
-		{
-			byte[,] d = new byte[9, 9];
-			for (int y = 0; y < 9; y++)
-				for (int x = 0; x < 9; x++)
-					if(Int32.TryParse(boxes[x, y].Text, out int ignoreMe))
-					{ 
-					d[x,y] = (byte)Int32.Parse(boxes[x, y].Text);
-					}
-			return d;
-		}
-
-		private void SetData(byte[,] d)
-		{
-			try
-			{
-				for (int y = 0; y < 9; y++)
-					for (int x = 0; x < 9; x++)
-						boxes[y, x].Text = Convert.ToString(d[y, x]);
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine(e.Message);
-				Console.ReadLine();
-			}
-
-		}
-
-		private void BtnClear_Click(object sender, EventArgs e)
-		{
-			mLblInfo.Text = "";
-			for (int y = 0; y < 9; y++)
-				for (int x = 0; x < 9; x++)
-					boxes[y, x].Text = "0";
-		}
-
-		private void ClearCells()
-		{
-			mLblInfo.Text = "";
-			for (int y = 0; y < 9; y++)
-				for (int x = 0; x < 9; x++)
-					boxes[y, x].Text = "0";
-		}
-
-		private int SpotRequired()
-		{
-			switch (mCbLevel.SelectedItem)
-			{
-				case "Easy":
-					return 40;
-				case "Medium":
-					return 35;
-				case "Hard":
-					return 30;
-				default:
-					return 30;
-			}
-		}
-
 		private void BtnLoad_Click(object sender, EventArgs e)
 		{
 			ClearCells();
@@ -135,6 +79,64 @@ namespace SudokuSolver
 			{
 				d = s.Data;
 				SetData(d);
+			}
+		}
+
+		private void BtnImport_Click(object sender, EventArgs e)
+		{
+			// Import Sudoku
+			mLblInfo.Text = "";
+			try
+			{
+				OpenFileDialog openDlg = new OpenFileDialog()
+				{
+					Filter = "txt files (*.txt)|*.txt",
+					FilterIndex = 1,
+					RestoreDirectory = true
+				};
+				if (openDlg.ShowDialog() == DialogResult.OK)
+				{
+					string fileName = openDlg.FileName;
+
+					string[] fileLines = File.ReadAllLines(fileName);
+					int[,] map = new int[fileLines.Length, fileLines[0].Split(' ').Length];
+					for (int i = 0; i < fileLines.Length; ++i)
+					{
+						string line = fileLines[i];
+						for (int j = 0; j < map.GetLength(1); ++j)
+						{
+							string[] split = line.Split(' ');
+							map[i, j] = Convert.ToInt32(split[j]);
+						}
+					}
+					LoadImportData(map);
+				}
+			}
+			catch (Exception ex)
+			{
+				mLblInfo.Text = mLblInfo.Text +
+					"--------------------" +
+				   "\nInvalid sudoku File";
+				// exception object can be used for logging or other purposes.
+
+			}
+		}
+
+		private void BtnUnique_Click(object sender, EventArgs e)
+		{
+			Sudoku s = new Sudoku();
+			byte[,] d = GetData();
+			s.Data = d;
+			mLblInfo.Text = "";
+
+			mLblInfo.Text = mLblInfo.Text + "------------------\r\n";
+			if (s.IsSudokuUnique())
+			{
+				mLblInfo.Text = mLblInfo.Text + "Sudoku unique\r\n";
+			}
+			else
+			{
+				mLblInfo.Text = mLblInfo.Text + "Sudoku not unique\r\n";
 			}
 		}
 
@@ -173,12 +175,46 @@ namespace SudokuSolver
 				else
 				{
 					// Solve failed
-					mLblInfo.Text = mLblInfo.Text + "  Solve failed\r\n";
-					mLblInfo.Text = mLblInfo.Text + String.Format("{0} seconds\r\n", (DateTime.Now - now).TotalSeconds);
+					mLblInfo.Text = mLblInfo.Text + "  Solve failed\n Invalid Sudoku";
 				}
 			}
-			
-			
+
+
+		}
+
+		private void BtnClear_Click(object sender, EventArgs e)
+		{
+			ClearCells();
+		}
+
+		private byte[,] GetData()
+		{
+			byte[,] d = new byte[9, 9];
+			for (int y = 0; y < 9; y++)
+				for (int x = 0; x < 9; x++)
+					if (Int32.TryParse(boxes[x, y].Text, out int ignoreMe))
+					{
+						d[x, y] = (byte)Int32.Parse(boxes[x, y].Text);
+					}
+			return d;
+		}
+
+		private void SetData(byte[,] d)
+		{
+			try
+			{
+				for (int y = 0; y < 9; y++)
+					for (int x = 0; x < 9; x++)
+						if (Convert.ToInt32(d[y, x]) == 0)
+							boxes[y, x].Text = "-";
+						else
+							boxes[y, x].Text = d[y, x].ToString();
+			}
+			catch (Exception e)
+			{
+				// do nothing
+			}
+
 		}
 
 		private bool IsSudokuGridFull()
@@ -187,73 +223,45 @@ namespace SudokuSolver
 			byte[,] d = GetData();
 			for (int y = 0; y < 9; y++)
 				for (int x = 0; x < 9; x++)
-					if (d[y, x] == 0)
-						ret = false; 
+					if (d[y, x] == 0 || d[y, x].ToString() == "-")
+						ret = false;
 			return ret;
 		}
 
-		private void BtnUnique_Click(object sender, EventArgs e)
-		{
-			Sudoku s = new Sudoku();
-			byte[,] d = GetData();
-			s.Data = d;
-			mLblInfo.Text = "";
-
-			mLblInfo.Text = mLblInfo.Text + "------------------\r\n";
-			if (s.IsSudokuUnique())
-			{
-				mLblInfo.Text = mLblInfo.Text + "Sudoku unique\r\n";
-			}
-			else
-			{
-				mLblInfo.Text = mLblInfo.Text + "Sudoku not unique\r\n";
-			}
-		}
-
-		private void LoadData(int[,] ds)
+		private void LoadImportData(int[,] d)
 		{
 			for (int y = 0; y < 9; y++)
 				for (int x = 0; x < 9; x++)
-					boxes[y, x].Text = ds[y,x].ToString();
+					if (Convert.ToInt32(d[y, x]) == 0)
+						boxes[y, x].Text = "-";
+					else
+						boxes[y, x].Text = d[y, x].ToString();
 		}
 
-		private void BtnImport_Click(object sender, EventArgs e)
+		private void ClearCells()
 		{
-			// Import Sudoku
 			mLblInfo.Text = "";
-			try
-			{
-			OpenFileDialog openDlg = new OpenFileDialog()
-			{
-				Filter = "txt files (*.txt)|*.txt",
-				FilterIndex = 1,
-				RestoreDirectory = true
-			};
-			if (openDlg.ShowDialog() == DialogResult.OK)
-			{
-				string fileName = openDlg.FileName;
+			for (int y = 0; y < 9; y++)
+				for (int x = 0; x < 9; x++)
+					boxes[y, x].Text = "-";
+		}
 
-				string[] fileLines = File.ReadAllLines(fileName);
-				int[,] map = new int[fileLines.Length, fileLines[0].Split(' ').Length];
-				for (int i = 0; i < fileLines.Length; ++i)
-				{
-					string line = fileLines[i];
-					for (int j = 0; j < map.GetLength(1); ++j)
-					{
-						string[] split = line.Split(' ');
-						map[i, j] = Convert.ToInt32(split[j]);
-					}
-				}
-				LoadData(map);
+		private int SpotRequired()
+		{
+			switch (mCbLevel.SelectedItem)
+			{
+				case "Easy":
+					return 35;
+				case "Medium":
+					return 33;
+				case "Hard":
+					return 31;
+				case "Samurai":
+					return 29;
+				default:
+					return 30;
 			}
 		}
-			catch (Exception ex)
-			{
-				mLblInfo.Text = mLblInfo.Text +
-					"--------------------" +
-				   "\nInvalid sudoku File";
 
-			}
-		}
 	}
 }
