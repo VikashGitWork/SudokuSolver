@@ -2,11 +2,11 @@
 {
 	internal struct EntryPoint
 	{
-		public int x, y;
+		public int X, Y;
 		public EntryPoint(int x, int y)
 		{
-			this.x = x;
-			this.y = y;
+			this.X = x;
+			this.Y = y;
 		}
 	}
 }

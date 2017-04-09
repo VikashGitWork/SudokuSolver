@@ -14,21 +14,20 @@ namespace SudokuSolver
 {
 	public partial class Puzzle : MetroFramework.Forms.MetroForm
 	{
-		private TextBox[,] boxes;
+		private TextBox[,] _boxes;
 
 		public Puzzle()
 		{
 			InitializeComponent();
 
-			boxes = new TextBox[9, 9];
+			_boxes = new TextBox[9, 9];
 			Font font = null;
 			mCbLevel.SelectedItem = "Easy";
-			TextBox txtBox;
-			for (int x = 0; x < 9; x++)
-				for (int y = 0; y < 9; y++)
+			for (var x = 0; x < 9; x++)
+				for (var y = 0; y < 9; y++)
 				{
 					{
-						txtBox = new TextBox();
+						var txtBox = new TextBox();
 						if (font == null)
 							font = new Font(txtBox.Font, FontStyle.Bold);
 						txtBox.Location = new Point(x * 40 + 10, y * 30 + 70);
@@ -40,7 +39,7 @@ namespace SudokuSolver
 						if (x == 0 || x == 2 || x == 4 || x == 6 || x == 8)
 							txtBox.BackColor = Color.WhiteSmoke;
 						this.Controls.Add(txtBox);
-						boxes[y, x] = txtBox;
+						_boxes[y, x] = txtBox;
 					}
 				}
 
@@ -50,13 +49,13 @@ namespace SudokuSolver
 		{
 			base.OnPaint(e);
 
-			Pen pen = new Pen(Color.LightSteelBlue, 3);
-			Graphics formGfx = this.CreateGraphics();
+			var pen = new Pen(Color.LightSteelBlue, 3);
+			var formGfx = this.CreateGraphics();
 
 			formGfx.DrawRectangle(pen, 6, 66, 363, 267);
 			pen.Width = 1;
 
-			Rectangle[] rects = new Rectangle[]
+			var rects = new[]
 			{
 				new Rectangle(7,68,119,86), new Rectangle(127,68,119,86), new Rectangle(246,68,121,86),
 				new Rectangle(8,140,119,105), new Rectangle(127,140,119,105), new Rectangle(246,140,121,105),
@@ -71,15 +70,17 @@ namespace SudokuSolver
 		private void BtnLoad_Click(object sender, EventArgs e)
 		{
 			ClearCells();
-			Sudoku s = new Sudoku();
-			byte[,] d = GetData();
+			var s = new Sudoku();
+			var d = GetData();
 			s.Data = d;
 			var result = s.Generate(SpotRequired());
-			if (result.Item2)
+			if (!result.Item2)
 			{
-				d = s.Data;
-				SetData(d);
+				return;
 			}
+
+			d = s.Data;
+			SetData(d);
 		}
 
 		private void BtnImport_Click(object sender, EventArgs e)
@@ -88,7 +89,7 @@ namespace SudokuSolver
 			mLblInfo.Text = "";
 			try
 			{
-				OpenFileDialog openDlg = new OpenFileDialog()
+				var openDlg = new OpenFileDialog()
 				{
 					Filter = "txt files (*.txt)|*.txt",
 					FilterIndex = 1,
@@ -96,23 +97,23 @@ namespace SudokuSolver
 				};
 				if (openDlg.ShowDialog() == DialogResult.OK)
 				{
-					string fileName = openDlg.FileName;
+					var fileName = openDlg.FileName;
 
-					string[] fileLines = File.ReadAllLines(fileName);
-					int[,] map = new int[fileLines.Length, fileLines[0].Split(' ').Length];
-					for (int i = 0; i < fileLines.Length; ++i)
+					var fileLines = File.ReadAllLines(fileName);
+					var map = new int[fileLines.Length, fileLines[0].Split(' ').Length];
+					for (var i = 0; i < fileLines.Length; ++i)
 					{
-						string line = fileLines[i];
-						for (int j = 0; j < map.GetLength(1); ++j)
+						var line = fileLines[i];
+						for (var j = 0; j < map.GetLength(1); ++j)
 						{
-							string[] split = line.Split(' ');
+							var split = line.Split(' ');
 							map[i, j] = Convert.ToInt32(split[j]);
 						}
 					}
 					LoadImportData(map);
 				}
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				mLblInfo.Text = mLblInfo.Text +
 					"--------------------" +
@@ -124,8 +125,8 @@ namespace SudokuSolver
 
 		private void BtnUnique_Click(object sender, EventArgs e)
 		{
-			Sudoku s = new Sudoku();
-			byte[,] d = GetData();
+			var s = new Sudoku();
+			var d = GetData();
 			s.Data = d;
 			mLblInfo.Text = "";
 
@@ -142,9 +143,9 @@ namespace SudokuSolver
 
 		private void BtnSolve_Click(object sender, EventArgs e)
 		{
-			Sudoku s = new Sudoku();
+			var s = new Sudoku();
 			mLblInfo.Text = "";
-			byte[,] d = GetData();
+			var d = GetData();
 			s.Data = d;
 
 			mLblInfo.Text = mLblInfo.Text + "------------------\r\n";
@@ -154,7 +155,7 @@ namespace SudokuSolver
 				return;
 			}
 
-			DateTime now = DateTime.Now;
+			var now = DateTime.Now;
 			mLblInfo.Text = mLblInfo.Text + "Solve started: " + now.ToLongTimeString() + "\r\n";
 			// should not solve if sudoku is already solved
 			if (IsSudokuGridFull() & s.IsSudokuUnique())
@@ -170,7 +171,7 @@ namespace SudokuSolver
 
 					d = s.Data;
 					SetData(d);
-					mLblInfo.Text = mLblInfo.Text + String.Format("{0} seconds\r\n", (DateTime.Now - now).TotalSeconds);
+					mLblInfo.Text = mLblInfo.Text + string.Format("{0} seconds\r\n", (DateTime.Now - now).TotalSeconds);
 				}
 				else
 				{
@@ -189,12 +190,12 @@ namespace SudokuSolver
 
 		private byte[,] GetData()
 		{
-			byte[,] d = new byte[9, 9];
-			for (int y = 0; y < 9; y++)
-				for (int x = 0; x < 9; x++)
-					if (Int32.TryParse(boxes[x, y].Text, out int ignoreMe))
+			var d = new byte[9, 9];
+			for (var y = 0; y < 9; y++)
+				for (var x = 0; x < 9; x++)
+					if (int.TryParse(_boxes[x, y].Text, out int _))
 					{
-						d[x, y] = (byte)Int32.Parse(boxes[x, y].Text);
+						d[x, y] = (byte)int.Parse(_boxes[x, y].Text);
 					}
 			return d;
 		}
@@ -203,14 +204,11 @@ namespace SudokuSolver
 		{
 			try
 			{
-				for (int y = 0; y < 9; y++)
-					for (int x = 0; x < 9; x++)
-						if (Convert.ToInt32(d[y, x]) == 0)
-							boxes[y, x].Text = "-";
-						else
-							boxes[y, x].Text = d[y, x].ToString();
+				for (var y = 0; y < 9; y++)
+					for (var x = 0; x < 9; x++)
+						_boxes[y, x].Text = Convert.ToInt32(d[y, x]) == 0 ? "-" : d[y, x].ToString();
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				// do nothing
 			}
@@ -219,31 +217,31 @@ namespace SudokuSolver
 
 		private bool IsSudokuGridFull()
 		{
-			bool ret = true;
-			byte[,] d = GetData();
-			for (int y = 0; y < 9; y++)
-				for (int x = 0; x < 9; x++)
+			var ret = true;
+			var d = GetData();
+			for (var y = 0; y < 9; y++)
+				for (var x = 0; x < 9; x++)
 					if (d[y, x] == 0 || d[y, x].ToString() == "-")
+					{
 						ret = false;
+					}
+
 			return ret;
 		}
 
 		private void LoadImportData(int[,] d)
 		{
-			for (int y = 0; y < 9; y++)
-				for (int x = 0; x < 9; x++)
-					if (Convert.ToInt32(d[y, x]) == 0)
-						boxes[y, x].Text = "-";
-					else
-						boxes[y, x].Text = d[y, x].ToString();
+			for (var y = 0; y < 9; y++)
+				for (var x = 0; x < 9; x++)
+					_boxes[y, x].Text = Convert.ToInt32(d[y, x]) == 0 ? "-" : d[y, x].ToString();
 		}
 
 		private void ClearCells()
 		{
 			mLblInfo.Text = "";
-			for (int y = 0; y < 9; y++)
-				for (int x = 0; x < 9; x++)
-					boxes[y, x].Text = "-";
+			for (var y = 0; y < 9; y++)
+				for (var x = 0; x < 9; x++)
+					_boxes[y, x].Text = "-";
 		}
 
 		private int SpotRequired()

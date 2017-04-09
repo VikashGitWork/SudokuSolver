@@ -5,11 +5,10 @@ namespace SudokuModel
 	public class Sudoku
 	{
 		// 0 = solve for
-		private byte[,] m_sudoku;
+		private byte[,] _mSudoku;
 		private enum Ret { Unique, NotUnique, NoSolution };
 		// Maps sub square index to m_sudoku
-		private readonly EntryPoint[,] m_subIndex =
-			new EntryPoint[,]
+		private readonly EntryPoint[,] _mSubIndex =
 			{
 				{ new EntryPoint(0,0),new EntryPoint(0,1),new EntryPoint(0,2),new EntryPoint(1,0),new EntryPoint(1,1),new EntryPoint(1,2),new EntryPoint(2,0),new EntryPoint(2,1),new EntryPoint(2,2)},
 				{ new EntryPoint(0,3),new EntryPoint(0,4),new EntryPoint(0,5),new EntryPoint(1,3),new EntryPoint(1,4),new EntryPoint(1,5),new EntryPoint(2,3),new EntryPoint(2,4),new EntryPoint(2,5)},
@@ -23,8 +22,7 @@ namespace SudokuModel
 		};
 
 		// Maps sub square to index
-		private readonly byte[,] m_subSquare =
-			new byte[,]
+		private readonly byte[,] _mSubSquare =
 			{
 				{0,0,0,1,1,1,2,2,2},
 				{0,0,0,1,1,1,2,2,2},
@@ -44,31 +42,19 @@ namespace SudokuModel
 		{
 			get
 			{
-				return m_sudoku.Clone() as byte[,];
+				return _mSudoku.Clone() as byte[,];
 			}
 
 			set
 			{
 				if (value.Rank == 2 && value.GetUpperBound(0) == 8 && value.GetUpperBound(1) == 8)
-					m_sudoku = value.Clone() as byte[,];
+					_mSudoku = value.Clone() as byte[,];
 				else
 					throw new Exception("Array has wrong size");
 			}
 		}
 
-		IRandomizer randomizer = new DefaultRandomizer();
-
-		public IRandomizer Randomizer
-		{
-			get
-			{
-				return randomizer;
-			}
-			set
-			{
-				randomizer = value;
-			}
-		}
+		public IRandomizer Randomizer { get; set; } = new DefaultRandomizer();
 
 		/// <summary>
 		/// Generate a new Sudoku
@@ -117,14 +103,14 @@ namespace SudokuModel
 		private bool Gen(int spots)
 		{
 			int xRand, yRand;
-			for (int i = 0; i < spots; i++)
+			for (var i = 0; i < spots; i++)
 			{
 				// Selecting random non used spot
 				do
 				{
 					xRand = Randomizer.GetInt(9);
 					yRand = Randomizer.GetInt(9);
-				} while (m_sudoku[yRand, xRand] != 0);
+				} while (_mSudoku[yRand, xRand] != 0);
 
 				/////////////////////////////////////
 				// Get feasible values for spot.
@@ -134,31 +120,31 @@ namespace SudokuModel
 				byte[] P = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
 				// Remove used numbers in the column from possiblities & set it to 0
-				for (int a = 0; a < 9; a++)
-					P[m_sudoku[a, xRand]] = 0;
+				for (var a = 0; a < 9; a++)
+					P[_mSudoku[a, xRand]] = 0;
 
 				// Remove used numbers in the row from possiblities & set it to 0
-				for (int b = 0; b < 9; b++)
-					P[m_sudoku[yRand, b]] = 0;
+				for (var b = 0; b < 9; b++)
+					P[_mSudoku[yRand, b]] = 0;
 
 				// Remove used numbers in the 3X3 block from possiblities & set it to 0
-				EntryPoint p;
-				int squareIndex = m_subSquare[yRand, xRand];
-				for (int c = 0; c < 9; c++)
+				EntryPoint entryPoint;
+				int squareIndex = _mSubSquare[yRand, xRand];
+				for (var c = 0; c < 9; c++)
 				{
-					p = m_subIndex[squareIndex, c];
-					P[m_sudoku[p.x, p.y]] = 0;
+					entryPoint = _mSubIndex[squareIndex, c];
+					P[_mSudoku[entryPoint.X, entryPoint.Y]] = 0;
 				}
 
-				int cP = 0;
+				var cP = 0;
 				// Calculate cardinality of P (Possbilities)
-				for (int d = 1; d < 10; d++)
+				for (var d = 1; d < 10; d++)
 					cP += P[d] == 0 ? 0 : 1;
 
 				// Is there a number to use?
 				if (cP > 0)
 				{
-					int e = 0;
+					var e = 0;
 
 					do
 					{
@@ -167,7 +153,7 @@ namespace SudokuModel
 					} while (P[e] == 0);
 
 					// Set one possible number in Sudoku from rule satisfied possbilities (Row, Column & Block Constraint) 
-					m_sudoku[yRand, xRand] = (byte)e;
+					_mSudoku[yRand, xRand] = (byte)e;
 				}
 				else
 				{
@@ -187,37 +173,37 @@ namespace SudokuModel
 		/// <returns>True if feasible</returns>
 		public bool IsSudokuFeasible()
 		{
-			for (int y = 0; y < 9; y++)
+			for (var y = 0; y < 9; y++)
 			{
-				for (int x = 0; x < 9; x++)
+				for (var x = 0; x < 9; x++)
 				{
 					// Set of possible solutions
-					byte[] M = new byte[10];
+					var m = new byte[10];
 
 					// Count used numbers in the vertical direction
-					for (int a = 0; a < 9; a++)
-						M[m_sudoku[a, x]]++;
+					for (var a = 0; a < 9; a++)
+						m[_mSudoku[a, x]]++;
 					// Sudoku feasible?
-					if (!Feasible(M))
+					if (!Feasible(m))
 						return false;
 
-					M = new byte[10];
+					m = new byte[10];
 					// Count used numbers in the horizontal direction
-					for (int b = 0; b < 9; b++)
-						M[m_sudoku[y, b]]++;
-					if (!Feasible(M))
+					for (var b = 0; b < 9; b++)
+						m[_mSudoku[y, b]]++;
+					if (!Feasible(m))
 						return false;
 
-					M = new byte[10];
+					m = new byte[10];
 					// Count used numbers in the sub square.
-					int squareIndex = m_subSquare[y, x];
-					for (int c = 0; c < 9; c++)
+					int squareIndex = _mSubSquare[y, x];
+					for (var c = 0; c < 9; c++)
 					{
-						EntryPoint p = m_subIndex[squareIndex, c];
-						if (p.x != y && p.y != x)
-							M[m_sudoku[p.x, p.y]]++;
+						var p = _mSubIndex[squareIndex, c];
+						if (p.X != y && p.Y != x)
+							m[_mSudoku[p.X, p.Y]]++;
 					}
-					if (!Feasible(M))
+					if (!Feasible(m))
 						return false;
 				}
 			}
@@ -229,10 +215,10 @@ namespace SudokuModel
 		/// Tests to check supplied number appears exactly once.
 		/// </summary>
 		/// <returns>True if exactly once rule is satisfied</returns>
-		private bool Feasible(byte[] M)
+		private bool Feasible(byte[] m)
 		{
-			for (int d = 1; d < 10; d++)
-				if (M[d] > 1)
+			for (var d = 1; d < 10; d++)
+				if (m[d] > 1)
 					return false;
 
 			return true;
@@ -245,8 +231,8 @@ namespace SudokuModel
 		/// <returns>True if unique</returns>
 		public bool IsSudokuUnique()
 		{
-			byte[,] m = Data;
-			bool b = TestUniqueness() == Ret.Unique;
+			var m = Data;
+			var b = TestUniqueness() == Ret.Unique;
 			Data = m;
 			return b;
 		}
@@ -259,47 +245,47 @@ namespace SudokuModel
 		private Ret TestUniqueness()
 		{
 			// Find untouched location with most information
-			int xp = 0;
-			int yp = 0;
-			byte[] Mp = null;
-			int cMp = 10;
+			var xp = 0;
+			var yp = 0;
+			byte[] mp = null;
+			var cMp = 10;
 
-			for (int y = 0; y < 9; y++)
+			for (var y = 0; y < 9; y++)
 			{
-				for (int x = 0; x < 9; x++)
+				for (var x = 0; x < 9; x++)
 				{
 					// Is this spot unused?
-					if (m_sudoku[y, x] == 0)
+					if (_mSudoku[y, x] == 0)
 					{
 						// Set M of possible solutions
-						byte[] M = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+						byte[] m = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
 						// Remove used numbers in the vertical direction
-						for (int a = 0; a < 9; a++)
-							M[m_sudoku[a, x]] = 0;
+						for (var a = 0; a < 9; a++)
+							m[_mSudoku[a, x]] = 0;
 
 						// Remove used numbers in the horizontal direction
-						for (int b = 0; b < 9; b++)
-							M[m_sudoku[y, b]] = 0;
+						for (var b = 0; b < 9; b++)
+							m[_mSudoku[y, b]] = 0;
 
 						// Remove used numbers in the sub square.
-						int squareIndex = m_subSquare[y, x];
-						for (int c = 0; c < 9; c++)
+						int squareIndex = _mSubSquare[y, x];
+						for (var c = 0; c < 9; c++)
 						{
-							EntryPoint p = m_subIndex[squareIndex, c];
-							M[m_sudoku[p.x, p.y]] = 0;
+							var p = _mSubIndex[squareIndex, c];
+							m[_mSudoku[p.X, p.Y]] = 0;
 						}
 
-						int cM = 0;
+						var cM = 0;
 						// Calculate cardinality of M
-						for (int d = 1; d < 10; d++)
-							cM += M[d] == 0 ? 0 : 1;
+						for (var d = 1; d < 10; d++)
+							cM += m[d] == 0 ? 0 : 1;
 
 						// Is there more information in this spot than in the best yet?
 						if (cM < cMp)
 						{
 							cMp = cM;
-							Mp = M;
+							mp = m;
 							xp = x;
 							yp = y;
 						}
@@ -316,12 +302,12 @@ namespace SudokuModel
 				return Ret.NoSolution;
 
 			// Try elements
-			int success = 0;
-			for (int i = 1; i < 10; i++)
+			var success = 0;
+			for (var i = 1; i < 10; i++)
 			{
-				if (Mp[i] != 0)
+				if (mp[i] != 0)
 				{
-					m_sudoku[yp, xp] = Mp[i];
+					_mSudoku[yp, xp] = mp[i];
 
 					switch (TestUniqueness())
 					{
@@ -343,7 +329,7 @@ namespace SudokuModel
 			}
 
 			// Restore to original state.
-			m_sudoku[yp, xp] = 0;
+			_mSudoku[yp, xp] = 0;
 
 			switch (success)
 			{
@@ -367,50 +353,50 @@ namespace SudokuModel
 		{
 
 			// Find untouched location with most information
-			int xp = 0;
-			int yp = 0;
-			byte[] Mp = null;
-			int cMp = 10;
+			var xp = 0;
+			var yp = 0;
+			byte[] mp = null;
+			var cMp = 10;
 
 			if (TestUniqueness() == Ret.NotUnique)
 				return false;
 
-			for (int y = 0; y < 9; y++)
+			for (var y = 0; y < 9; y++)
 			{
-				for (int x = 0; x < 9; x++)
+				for (var x = 0; x < 9; x++)
 				{
 					// Is this spot unused?
-					if (m_sudoku[y, x] == 0)
+					if (_mSudoku[y, x] == 0)
 					{
 						// Set P of possible solutions
 						byte[] P = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
 						// Remove used numbers in the vertical direction
-						for (int a = 0; a < 9; a++)
-							P[m_sudoku[a, x]] = 0;
+						for (var a = 0; a < 9; a++)
+							P[_mSudoku[a, x]] = 0;
 
 						// Remove used numbers in the horizontal direction
-						for (int b = 0; b < 9; b++)
-							P[m_sudoku[y, b]] = 0;
+						for (var b = 0; b < 9; b++)
+							P[_mSudoku[y, b]] = 0;
 
 						// Remove used numbers in the sub square.
-						int squareIndex = m_subSquare[y, x];
-						for (int c = 0; c < 9; c++)
+						int squareIndex = _mSubSquare[y, x];
+						for (var c = 0; c < 9; c++)
 						{
-							EntryPoint p = m_subIndex[squareIndex, c];
-							P[m_sudoku[p.x, p.y]] = 0;
+							var p = _mSubIndex[squareIndex, c];
+							P[_mSudoku[p.X, p.Y]] = 0;
 						}
 
-						int cP = 0;
+						var cP = 0;
 						// Calculate cardinality of M
-						for (int d = 1; d < 10; d++)
+						for (var d = 1; d < 10; d++)
 							cP += P[d] == 0 ? 0 : 1;
 
 						// Is there more information in this spot than in the best yet?
 						if (cP < cMp)
 						{
 							cMp = cP;
-							Mp = P;
+							mp = P;
 							xp = x;
 							yp = y;
 						}
@@ -427,18 +413,18 @@ namespace SudokuModel
 				return false;
 
 			// Try elements
-			for (int i = 1; i < 10; i++)
+			for (var i = 1; i < 10; i++)
 			{
-				if (Mp[i] != 0)
+				if (mp[i] != 0)
 				{
-					m_sudoku[yp, xp] = Mp[i];
+					_mSudoku[yp, xp] = mp[i];
 					if (Solve())
 						return true;
 				}
 			}
 
 			// Restore to original state.
-			m_sudoku[yp, xp] = 0;
+			_mSudoku[yp, xp] = 0;
 			return false;
 		}
 

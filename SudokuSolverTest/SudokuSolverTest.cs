@@ -7,7 +7,7 @@ namespace SudokuSolverTest
 	[TestClass]
 	public class SudokuTest
 	{
-		private TestContext testContextInstance;
+		private TestContext _testContextInstance;
 
 		/// <summary>
 		///Gets or sets the test context which provides
@@ -17,20 +17,20 @@ namespace SudokuSolverTest
 		{
 			get
 			{
-				return testContextInstance;
+				return _testContextInstance;
 			}
 			set
 			{
-				testContextInstance = value;
+				_testContextInstance = value;
 			}
 		}
 
-		Sudoku sudoku = new Sudoku();
+		Sudoku _sudoku = new Sudoku();
 
 		[TestMethod()]
 		public void IsSudokuUniqueTest()
 		{
-			sudoku.Data = new Byte[,]{
+			_sudoku.Data = new byte[,]{
 				{1,7,0,0,0,0,0,0,0},
 				{0,0,0,2,0,0,0,0,0},
 				{0,0,0,0,0,0,6,8,0},
@@ -42,14 +42,14 @@ namespace SudokuSolverTest
 				{0,0,0,0,9,4,0,0,0}
 			};
 
-			var actual = sudoku.IsSudokuUnique();
+			var actual = _sudoku.IsSudokuUnique();
 			Assert.AreEqual(true, actual);
 		}
 
 		[TestMethod()]
 		public void IsSudokuNotUniqueTest()
 		{
-			sudoku.Data = new Byte[,]{
+			_sudoku.Data = new byte[,]{
 				{0,0,0,0,0,0,0,9,0},
 				{0,0,0,0,9,0,4,6,7},
 				{9,0,4,1,0,0,0,2,5},
@@ -61,14 +61,14 @@ namespace SudokuSolverTest
 				{0,1,0,0,0,0,0,0,0}
 			};
 
-			var actual = sudoku.IsSudokuUnique();
+			var actual = _sudoku.IsSudokuUnique();
 			Assert.AreEqual(false, actual);
 		}
 
 		[TestMethod()]
 		public void SolveSuccessTest()
 		{
-			sudoku.Data = new Byte[,]{
+			_sudoku.Data = new byte[,]{
 				{1,7,0,0,0,0,0,0,0},
 				{0,0,0,2,0,0,0,0,0},
 				{0,0,0,0,0,0,6,8,0},
@@ -80,14 +80,14 @@ namespace SudokuSolverTest
 				{0,0,0,0,9,4,0,0,0}
 			};
 
-			var actual = sudoku.Solve();
+			var actual = _sudoku.Solve();
 			Assert.AreEqual(true, actual);
 		}
 
 		[TestMethod()]
 		public void SolveNoSuccessTest()
 		{
-			sudoku.Data = new Byte[,]{
+			_sudoku.Data = new byte[,]{
 				{1,7,0,0,0,0,0,0,0},
 				{0,0,0,2,0,0,0,0,0},
 				{0,0,0,0,0,0,6,8,0},
@@ -99,14 +99,14 @@ namespace SudokuSolverTest
 				{0,0,0,0,9,4,0,0,7}
 			};
 
-			var actual = sudoku.Solve();
+			var actual = _sudoku.Solve();
 			Assert.AreEqual(false, actual);
 		}
 
 		[TestMethod()]
 		public void IsSudokuFeasibleTest()
 		{
-			sudoku.Data = new Byte[,]{
+			_sudoku.Data = new byte[,]{
 				{1,7,0,0,0,0,0,0,0},
 				{0,0,0,2,0,0,0,0,0},
 				{0,0,0,0,0,0,6,8,0},
@@ -118,14 +118,14 @@ namespace SudokuSolverTest
 				{0,0,0,0,9,4,0,0,7}
 			};
 
-			var actual = sudoku.IsSudokuFeasible();
+			var actual = _sudoku.IsSudokuFeasible();
 			Assert.AreEqual(true, actual);
 		}
 
 		[TestMethod()]
 		public void IsSudokuNotFeasibleTest()
 		{
-			sudoku.Data = new Byte[,]{
+			_sudoku.Data = new byte[,]{
 				{1,7,0,0,0,0,0,0,0},
 				{0,0,0,2,0,0,0,0,0},
 				{0,0,0,0,0,0,6,8,0},
@@ -137,14 +137,14 @@ namespace SudokuSolverTest
 				{0,0,0,0,9,4,4,0,7}
 			};
 
-			var actual = sudoku.IsSudokuFeasible();
+			var actual = _sudoku.IsSudokuFeasible();
 			Assert.AreEqual(false, actual);
 		}
 
 		[TestMethod()]
 		public void GenerateTest()
 		{
-			sudoku.Data = new Byte[,]{
+			_sudoku.Data = new byte[,]{
 				{0,0,0,0,0,0,0,0,0},
 				{0,0,0,0,0,0,0,0,0},
 				{0,0,0,0,0,0,0,0,0},
@@ -156,10 +156,10 @@ namespace SudokuSolverTest
 				{0,0,0,0,0,0,0,0,0}
 			};
 
-			bool actual = sudoku.Generate(30).Item2;
-			bool feasible = sudoku.IsSudokuFeasible();
-			bool unique = sudoku.IsSudokuUnique();
-			bool solve = sudoku.Solve();
+			var actual = _sudoku.Generate(30).Item2;
+			var feasible = _sudoku.IsSudokuFeasible();
+			var unique = _sudoku.IsSudokuUnique();
+			var solve = _sudoku.Solve();
 
 			Assert.AreEqual(true, actual && feasible && unique && solve);
 		}

@@ -103,7 +103,7 @@
             "Medium",
             "Hard",
             "Samurai"});
-			this.mCbLevel.Location = new System.Drawing.Point(433, 74);
+			this.mCbLevel.Location = new System.Drawing.Point(433, 63);
 			this.mCbLevel.Name = "mCbLevel";
 			this.mCbLevel.Size = new System.Drawing.Size(153, 29);
 			this.mCbLevel.TabIndex = 6;
