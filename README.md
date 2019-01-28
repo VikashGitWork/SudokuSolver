@@ -1,2 +1,2 @@
 # SudokuSolver
-This is a repository for 9 * 9 sudoku solver, it utlizes some of already created code algorithm.
+It's 9 * 9 sudoku solver, it utlizes some of already created code algorithm, due credit to those guys.
